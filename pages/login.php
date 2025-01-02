@@ -18,6 +18,9 @@
                 <h1 class="text-4xl font-bold text-center text-indigo-600">StormQ</h1>
                 <h2 class="mt-6 text-center text-2xl font-semibold text-gray-900">Sign in to your account</h2>
             </div>
+
+
+            
             <form action="includes/login.inc.php" method="post" class="mt-8 space-y-6" action="#" method="POST">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
