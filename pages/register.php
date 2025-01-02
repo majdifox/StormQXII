@@ -1,6 +1,9 @@
 <?php
+require_once "../config/dbconfig.php";
+require_once "../models/users.php";
+require_once "../models/member.php";
 
-
+if
 
 ?>
 <!DOCTYPE html>
@@ -20,7 +23,7 @@
             </div>
 
 
-            <form action="includes/register.inc.php" method="post" class="mt-8 space-y-6" action="#" method="POST">
+            <form action="../includes/register.inc.php" method="post" class="mt-8 space-y-6" action="#" method="POST">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="firstName" class="sr-only">First Name</label>

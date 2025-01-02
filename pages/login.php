@@ -1,5 +1,41 @@
 <?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
+require_once '../config/dbconfig.php';
+require_once "../models/user.php";
+
+$database = new Database();
+$db = $database->getConnection();
+
+$error = '';
+
+if(isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $user = new User($db);
+    $user->email = $email;
+    $user->password = $password;
+
+    if($user->login()) {
+        $_SESSION['user_id'] = $user->id;
+        $_SESSION['role'] = $user->role;
+        $_SESSION['nom'] = $user->nom;
+        $_SESSION['prenom'] = $user->prenom;
+        setcookie("user_logged", "true", time() + (86400 * 30), "/");
+    
+        if ($user->role == 'author') {
+            header("Location: index.php?matricule=" . $user->id);
+        } elseif($user->post=='member') {
+            header("Location: pages/membre.php?matricule=" . $user->id);
+        }
+        exit();
+    } else {
+        $error = "Identifiants invalides";
+    }
+}
 
 ?>
 
@@ -21,7 +57,7 @@
 
 
             
-            <form action="includes/login.inc.php" method="post" class="mt-8 space-y-6" action="#" method="POST">
+            <form action="../models/user.php" method="post" class="mt-8 space-y-6"  method="POST">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="email" class="sr-only">Email address</label>
