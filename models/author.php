@@ -77,10 +77,10 @@ public function modifyArticle(){
 }
 
 
-public function deleteArticle(){
+// public function deleteArticle(){
 
-    $query = "DELETE "
-}
+//     $query = "DELETE "
+// }
 
 }  
 
