@@ -27,7 +27,7 @@ if(isset($_POST['submit'])) {
         $newuser->setPassword($password);
 
         $newuser->setRole($role);
-        $newuser->setRole($role);
+        $newuser->setPhone($phone);
 
         
         $registerResult = $newuser->register();
