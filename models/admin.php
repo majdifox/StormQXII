@@ -24,6 +24,29 @@ class admin extends users{
 
         $stmt->execute();
 
+        return $stmt;
+
+    }
+
+    public function modifyCategory(){
+
+        $query = "UPDATE categories SET name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_at=:created_at";
+        $stmt = $this->conn->prepare($query);
+        $stmt = bindParam(":name",$name);
+        $stmt = bindParam(":description",$description);
+        $stmt = bindParam(":created_at",$created_at);
+        $stmt = bindParam(":updated_at",$updated_at);
+        $stmt = bindParam(":created_by",$created_by);
+
+        $stmt->execute();
+
+        return $stmt;
+
+    }
+
+    public function deleteCategory(){
+
+
     }
 
 
