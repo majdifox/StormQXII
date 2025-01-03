@@ -30,8 +30,8 @@ if(isset($_POST['submit'])) {
         $newuser->setPhone($phone);
 
         
-        $registerResult = $newuser->register();
-        var_dump($registerResult);
+        // $registerResult = $newuser->register();
+        // var_dump($registerResult);
         
         // if($loginResult) {
         //     echo "Register successful";
