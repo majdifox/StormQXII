@@ -22,7 +22,7 @@ class author extends member{
 
 
 
-public function newArticle(){
+public function createArticle(){
 
     $query = "INSERT INTO ". $this->$articles . "SET title=:title, status=:status, description=:description, content=:content, category_id=:category_id, author_id=:author_id, created_at=:created_at, updated_at=:updated_at, publication_date=:publication_date ";
     $stmt= $this->conn->prepare($query);
@@ -73,11 +73,14 @@ public function modifyArticle(){
     $stmt = bindParam(":publication_date", $this->publication_date);
 
     $stmt->execute();
-    return $stmtl;
+    return $stmt;
 }
 
 
+public function deleteArticle(){
 
+    $query = "DELETE "
+}
 
 }  
 
