@@ -19,6 +19,14 @@ class users{
 
     }
 
+    public function gettable(){
+        return $this->table_name;
+    }
+
+    public function settable($table_name){
+        $this->table_name = $table_name;
+    }
+
     public function getId(){
         return $this->id;
     }

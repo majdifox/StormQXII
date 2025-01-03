@@ -6,28 +6,83 @@
 $database = new Database();
 $db = $database->getConnection();
 
-$user = new member($db);
+// $user = new member($db);
 
-$message = '';
+// $message = '';
 
 if(isset($_POST['submit'])) {
+    try {
+        $firstname = $_POST['firstname'];
+        $lastname = $_POST['lastname'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $phone = $_POST['phone'];
+        $role = $_POST['role'];
+        
+        $newuser = new member($db);
+        $newuser->setFirstname($firstname);
+        $newuser->setLastname($lastname);
+
+        $newuser->setEmail($email);
+        $newuser->setPassword($password);
+
+        $newuser->setRole($role);
+        $newuser->setRole($role);
+
+        
+        $registerResult = $newuser->register();
+        var_dump($registerResult);
+        
+        // if($loginResult) {
+        //     echo "Register successful";
+        // } else {
+        //     echo "Register error";
+        // }
+    } catch (Exception $e) {
+        echo "register process error: " . $e->getMessage();
+    }
+
+
+if($newuser->register()) {
+    $_SESSION['id'] = $newuser->getId();
+    $_SESSION['role'] = $newuser->getRole();
+    $_SESSION['firstname'] = $newuser->getFirstname();
+    $_SESSION['lastname'] = $newuser->getLastname();
+    $_SESSION['email'] = $newuser->getEmail();
+    $_SESSION['password'] = $newuser->getPassword();
+    $_SESSION['phone'] = $newuser->getPhone();
+
+
+    setcookie("user_logged", "true", time() + (86400 * 30), "/");
+
+    if ($newuser->getRole() == 'author') {
+        header("Location: create.php?id=" . $newuser->getId());
+    } elseif($newuser->getRole() == 'member') {
+        header("Location: index.php?id=" . $newuser->getId());
+    }
+    exit();
+} else {
+    $error = "Identifiants invalides";
+}
+
+}
+
+// if(isset($_POST['submit'])) {
    
 
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
+   
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+//     $email = $_POST['email'];
+//     $password = $_POST['password'];
 
-    $phone = $_POST['phone'];
-    $role = $_POST['role'];
+  
 
-    if ($user->register()) {
-        $message = "Compte créé avec succès. Votre email est : " . $user->email;
-    } else {
-        $message = "Une erreur est survenue lors de la création du compte.";
-    }
-}
+//     if ($user->register()) {
+//         $message = "Compte créé avec succès. Votre email est : " . $user->email;
+//     } else {
+//         $message = "Une erreur est survenue lors de la création du compte.";
+//     }
+// }
 
 ?>
 <!DOCTYPE html>
@@ -47,7 +102,7 @@ if(isset($_POST['submit'])) {
             </div>
             <!-- ="../includes/register.inc.php" -->
 
-            <form action="" method="post" class="mt-8 space-y-6" action="#" method="POST">
+            <form action="" method="post" class="mt-8 space-y-6" action="#">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="firstName" class="sr-only">First Name</label>
@@ -84,7 +139,7 @@ if(isset($_POST['submit'])) {
                         <select id="role" name="role" required 
                             class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-lg">
                             <option value="member">Member</option>
-                            <option value="creator">Creator</option>
+                            <option value="author">Author</option>
                         </select>
                     </div>   
                 </div>
