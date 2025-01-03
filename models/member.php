@@ -7,7 +7,7 @@ class member extends users {
 public function register(){
 
 
-    $query = "INSERT INTO " . $this->$table_name . "SET firstname=:firstname, lastname=:lastname, email=:email, password=:password, phone=:phone, role=:role";
+    $query = "INSERT INTO " . $this->$table_name . " SET firstname=:firstname, lastname=:lastname, email=:email, password=:password, phone=:phone, role=:role";
     $stmt = $this->conn->prepare($query);
 
 

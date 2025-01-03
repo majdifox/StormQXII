@@ -6,7 +6,7 @@
 $database = new Database();
 $db = $database->getConnection();
 
-$user = new users($db);
+$user = new member($db);
 
 $message = '';
 
