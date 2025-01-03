@@ -37,7 +37,7 @@ public function register(){
 
 public function articlesfeed(){
 
-    $query = "SELECT id, title, 'description', content, category_id, author_id, created_at FROM articles WHERE id= :id ";
+    $query = "SELECT id, title, 'description', content, category_id, author_id, created_at FROM articles";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
@@ -47,11 +47,17 @@ public function articlesfeed(){
 
 public function sortbycategory(){
 
-    $query = "SELECT id, title, 'description', content, category_id, author_id, created_at FROM articles WHERE id= :id ORDER BY created_at DESC;"; 
+    $query = "SELECT id, title, 'description', content, category_id, author_id, created_at FROM articles ORDER BY created_at DESC;"; 
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     return $stmt;
 }
+
+
+
+
+
+
 
 }
 
