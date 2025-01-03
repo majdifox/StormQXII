@@ -26,8 +26,10 @@ public function register(){
     $stmt-> bindParam(":phone", $this->phone);
     $stmt-> bindParam(":role", $this->role);
 
-    return $stmt;
-
+    if($stmt->execute()) {
+        return true;
+    }
+    return false;
 }
 
 public function articlesfeed(){
