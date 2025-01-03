@@ -1,9 +1,33 @@
 <?php
-require_once "../config/dbconfig.php";
-require_once "../models/users.php";
-require_once "../models/member.php";
+    require_once "./config/dbconfig.php";
+    require_once "./models/users.php";
+    require_once "./models/member.php";
 
-if
+$database = new Database();
+$db = $database->getConnection();
+
+$user = new users($db);
+
+$message = '';
+
+if(isset($_POST['submit'])) {
+   
+
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $phone = $_POST['phone'];
+    $role = $_POST['role'];
+
+    if ($user->register()) {
+        $message = "Compte créé avec succès. Votre email est : " . $user->email;
+    } else {
+        $message = "Une erreur est survenue lors de la création du compte.";
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -21,19 +45,19 @@ if
                 <h1 class="text-4xl font-bold text-center text-indigo-600">StormQ</h1>
                 <h2 class="mt-6 text-center text-2xl font-semibold text-gray-900">Create your account</h2>
             </div>
+            <!-- ="../includes/register.inc.php" -->
 
-
-            <form action="../includes/register.inc.php" method="post" class="mt-8 space-y-6" action="#" method="POST">
+            <form action="" method="post" class="mt-8 space-y-6" action="#" method="POST">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="firstName" class="sr-only">First Name</label>
-                        <input id="firstName" name="firstName" type="text" required 
+                        <input id="firstName" name="firstname" type="text" required 
                             class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="First Name">
                     </div>
                     <div>
                         <label for="lastName" class="sr-only">Last Name</label>
-                        <input id="lastName" name="lastName" type="text" required 
+                        <input id="lastName" name="lastname" type="text" required 
                             class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Last Name">
                     </div>
@@ -48,6 +72,12 @@ if
                         <input id="password" name="password" type="password" required 
                             class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Password">
+                    </div>
+                    <div>
+                        <label for="phone" class="sr-only">phone</label>
+                        <input id="phone" name="phone" type="text" required 
+                            class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Phone Number">
                     </div>
                     <div>
                         <label for="role" class="block text-sm font-medium text-gray-700">Select Role</label>

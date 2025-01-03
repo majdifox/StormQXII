@@ -3,33 +3,57 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once '../config/dbconfig.php';
-require_once "../models/user.php";
+// Database connection debug
+try {
+    require_once "./config/dbconfig.php";
+    require_once "./models/users.php";
+    require_once "./models/member.php";
+    
+    $database = new Database();
+    $db = $database->getConnection();
+    echo "DB Connection OK\n";
+} catch (Exception $e) {
+    die("Error loading required files or DB connection: " . $e->getMessage());
+}
 
-$database = new Database();
-$db = $database->getConnection();
+if(isset($_POST['submit'])) {
+    try {
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
+        $user = new users($db);
+        $user->setEmail($email);
+        $user->setPassword($password);
+        
+        $loginResult = $user->login();
+        var_dump($loginResult);
+        
+        if($loginResult) {
+            echo "Login successful";
+            var_dump($_SESSION);
+        } else {
+            echo "Login failed";
+        }
+    } catch (Exception $e) {
+        echo "Login process error: " . $e->getMessage();
+    }
 
-$error = '';
 
-if(isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
 
-    $user = new User($db);
-    $user->email = $email;
-    $user->password = $password;
+
+
 
     if($user->login()) {
-        $_SESSION['user_id'] = $user->id;
-        $_SESSION['role'] = $user->role;
-        $_SESSION['nom'] = $user->nom;
-        $_SESSION['prenom'] = $user->prenom;
+        $_SESSION['id'] = $user->getId();
+        $_SESSION['role'] = $user->getRole();
+        $_SESSION['firstname'] = $user->getFirstname();
+        $_SESSION['lastname'] = $user->getLastname();
         setcookie("user_logged", "true", time() + (86400 * 30), "/");
     
-        if ($user->role == 'author') {
-            header("Location: index.php?matricule=" . $user->id);
-        } elseif($user->post=='member') {
-            header("Location: pages/membre.php?matricule=" . $user->id);
+        if ($user->getRole() == 'author') {
+            header("Location: index.php?id=" . $user->getId());
+        } elseif($user->getRole() == 'member') {
+            header("Location: pages/membre.php?id=" . $user->getId());
         }
         exit();
     } else {
@@ -57,7 +81,7 @@ if(isset($_POST['login'])) {
 
 
             
-            <form action="../models/user.php" method="post" class="mt-8 space-y-6"  method="POST">
+            <form action="login.php" method="post" class="mt-8 space-y-6">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="email" class="sr-only">Email address</label>

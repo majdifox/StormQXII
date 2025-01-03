@@ -96,29 +96,36 @@ class users{
 
 
 
-    public function login(){
-
-
-        $query = "SELECT * FROM " . $this->table_name . "WHERE email ? LIMIT 0,1";
+    public function login() {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE email = ? LIMIT 0,1";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1,$this->email);
+        $stmt->bindParam(1, $this->email);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-
-
-        if($row && passord_verify($this->password, $row['password'])){
-
-            $this->id = $row['id'];
-            $this->firstname = $row['firstname'];
-            $this->lastname = $row['lastname'];
-
-            return true;
+        
+        error_log("Stored password hash: " . $row['password']);
+        error_log("Input password: " . $this->password);
+        
+        if($row) {
+            $passwordMatch = password_verify($this->password, $row['password']);
+            error_log("Password match: " . ($passwordMatch ? 'true' : 'false'));
+            
+            if($passwordMatch) {
+                $this->id = $row['id'];
+                $this->firstname = $row['firstname'];
+                $this->lastname = $row['lastname'];
+                $this->role = $row['role'];
+                return true;
+            }
         }
-        return flase;
+        return false;
+        error_log("Query: " . $query);
+error_log("Email: " . $this->email);
+error_log("Row data: " . print_r($row, true));
 
     }
+
+
 
 
 //  public function check(){
