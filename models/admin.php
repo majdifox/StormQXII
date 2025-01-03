@@ -50,6 +50,14 @@ class admin extends users{
     }
 
 
+    public function displayCategory(){
+
+        $query = "SELECT name, description, created_at, updated_at, created_at FROM categories";
+        $stmt = $this->prepare($query);
+        $stmt->execute();
+
+        return $stmt;
+    }
 
 }
 
