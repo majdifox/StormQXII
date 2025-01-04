@@ -36,13 +36,13 @@ public function createArticle(){
     $this->$created_at= htmlspecialchars(strip_tags($this->$created_at));
     $this->$updated_at= htmlspecialchars(strip_tags($this->$updated_at));
 
-    $stmt = bindParam(":title", $this->title);
-    $stmt = bindParam(":status", $this->status);
-    $stmt = bindParam(":description", $this->description);
-    $stmt = bindParam(":content", $this->content);
-    $stmt = bindParam(":category_at", $this->category_at);
-    $stmt = bindParam(":updated_at", $this->updated_at);
-    $stmt = bindParam(":publication_date", $this->publication_date);
+    $stmt->bindParam(":title", $this->title);
+    $stmt->bindParam(":status", $this->status);
+    $stmt->bindParam(":description", $this->description);
+    $stmt->bindParam(":content", $this->content);
+    $stmt->bindParam(":category_at", $this->category_at);
+    $stmt->bindParam(":updated_at", $this->updated_at);
+    $stmt->bindParam(":publication_date", $this->publication_date);
 
     if($stmt->execute){
         return true;
@@ -64,13 +64,13 @@ public function modifyArticle(){
     $query = "UPDATE articles SET title=:title, status=:status, description=:description, content=:content, category_id=:category_id, author_id=:author_id, created_at=:created_at, updated_at=:updated_at, publication_date=:publication_date ";
     $stmt = $this->conn->prepare($query);
    
-    $stmt = bindParam(":title", $this->title);
-    $stmt = bindParam(":status", $this->status);
-    $stmt = bindParam(":description", $this->description);
-    $stmt = bindParam(":content", $this->content);
-    $stmt = bindParam(":category_at", $this->category_at);
-    $stmt = bindParam(":updated_at", $this->updated_at);
-    $stmt = bindParam(":publication_date", $this->publication_date);
+    $stmt->bindParam(":title", $this->title);
+    $stmt->bindParam(":status", $this->status);
+    $stmt->bindParam(":description", $this->description);
+    $stmt->bindParam(":content", $this->content);
+    $stmt->bindParam(":category_at", $this->category_at);
+    $stmt->bindParam(":updated_at", $this->updated_at);
+    $stmt->bindParam(":publication_date", $this->publication_date);
 
     $stmt->execute();
     return $stmt;
