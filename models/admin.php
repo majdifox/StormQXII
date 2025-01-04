@@ -26,7 +26,7 @@ class admin extends users{
 
         return $stmt;
 
-    }
+    }       
 
     public function modifyCategory(){
 
@@ -68,7 +68,27 @@ class admin extends users{
 
 
 
-    public function validateArticle(){
+    public function validateArticle($id, $isApproved){
+
+        if($isApproved){
+            $validationStatus = 'confirme';
+
+        }
+        else{
+            $validationStatus = 'non confirme';
+        }
+
+        $query = "UPDATE articles SET validation_admin = :validationStatus WHERE id= :id";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":validationStatus",$validationStatus);
+        $stmt->bindParam(":id",$id);
+
+        $stmt->execute();
+
+        return $stmt;
+        
 
     }
 }
