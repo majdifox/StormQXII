@@ -20,10 +20,11 @@ class admin extends users{
     public function createCategory($name,$description){
         $created_at = date("Y-m-d");
         $updated_at = date("Y-m-d");
-        $created_by = $_GET["id"];
+        $created_by = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : NULL;
 
-        $query = "INSERT INTO categories SET name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_by=:created_by";
+        $query = "INSERT INTO categories SET  name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_by=:created_by";
         $stmt = $this->conn->prepare($query);
+        // $stmt->bindParam(":id",$id);
         $stmt->bindParam(":name",$name);
         $stmt->bindParam(":description",$description);
         $stmt->bindParam(":created_at",$created_at);
@@ -36,13 +37,13 @@ class admin extends users{
 
     }       
 
-    public function modifyCategory(){
-
-        $query = "UPDATE categories SET name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_at=:created_at";
+    public function modifyCategory($name, $description){
+        $updated_at = date("Y-m-d");
+        $created_by = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : NULL;
+        $query = "UPDATE categories SET name=:name, description=:description,  updated_at=:updated_at, created_by=:created_by";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":name",$name);
         $stmt->bindParam(":description",$description);
-        $stmt->bindParam(":created_at",$created_at);
         $stmt->bindParam(":updated_at",$updated_at);
         $stmt->bindParam(":created_by",$created_by);
 

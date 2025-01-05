@@ -96,7 +96,7 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                 </div>
                                 <div class="flex space-x-2">
                                     
-                                    <button class="text-blue-600 hover:text-blue-800">Edit</button>
+                                    <a href="categoryedit.php?id=<?=$category["id"]?>" class="text-blue-600 hover:text-blue-800">Edit</a>
                                     <form action="" method="POST">
                                     <button type="submit" name="deleteCategory" value="<?=$category["id"]?>" class="text-red-600 hover:text-red-800">Delete</button>
                                     </form>
