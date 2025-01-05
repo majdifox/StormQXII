@@ -31,6 +31,7 @@ if(isset($_POST['submit'])) {
         if($loginResult) {
             echo "Login successful";
             var_dump($_SESSION);
+
         } else {
             echo "Login failed";
         }
@@ -54,6 +55,9 @@ if(isset($_POST['submit'])) {
             header("Location: index.php?id=" . $user->getId());
         } elseif($user->getRole() == 'member') {
             header("Location: pages/membre.php?id=" . $user->getId());
+        }
+        else{
+            header("Location: admindash.php?id=" . $user->getId());
         }
         exit();
     } else {

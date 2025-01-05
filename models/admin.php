@@ -11,10 +11,18 @@ class admin extends users{
     private $updated_at;
     private $created_by;
 
+    public function __construct($db){
 
-    public function createCategory(){
+        parent::__construct($db);
 
-        $query = "INSERT INTO " .$this->$categories . "SET name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_at=:created_at";
+    }
+
+    public function createCategory($name,$description){
+        $created_at = date("Y-m-d");
+        $updated_at = date("Y-m-d");
+        $created_by = $_GET["id"];
+
+        $query = "INSERT INTO categories SET name=:name, description=:description, created_at=:created_at, updated_at=:updated_at, created_by=:created_by";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":name",$name);
         $stmt->bindParam(":description",$description);

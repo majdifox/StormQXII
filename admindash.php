@@ -1,3 +1,22 @@
+<?php
+require_once "./models/admin.php";
+require_once "./config/dbconfig.php";
+
+if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
+
+    $db = new Database();
+    $admin = new admin($db->getConnection());
+
+    $name= $_POST["categoryName"] ;
+    $description = $_POST["categoryDescription"] ;
+    
+    $admin->createCategory($name,$description);
+
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,15 +127,15 @@
                         </svg>
                     </button>
                 </div>
-                <form>
+                <form method = "post">
                     <div class="p-6 space-y-6">
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900">Category Name</label>
-                            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <input type="text" name="categoryName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900">Description</label>
-                            <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
+                            <textarea name="categoryDescription" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
                         </div>
                     </div>
                     <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b">
