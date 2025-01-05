@@ -54,13 +54,14 @@ class admin extends users{
 
     public function deleteCategory($id){
 
-        $query = "DELETE FROM categories where id = :id ";
+        $query = "DELETE  FROM categories where id = :id ";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(":id",$id);
+
         $stmt->execute();
 
-        return $stmt;
+
 
     }
 

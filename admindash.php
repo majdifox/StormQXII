@@ -20,6 +20,18 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
     $display = $admin->displayCategory();
     var_dump($display);
 
+    if(isset($_POST["deleteCategory"])){
+
+        $db = new Database();
+        $id =$_POST["deleteCategory"];
+        
+        $admin = new admin($db->getConnection());
+        $result = $admin->deleteCategory($id);
+        header("Location: admindash.php?id=" . $admin->getId());
+        
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -83,8 +95,12 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                     <p class="text-gray-600 mt-1"><?=$category["description"]?></p>
                                 </div>
                                 <div class="flex space-x-2">
+                                    
                                     <button class="text-blue-600 hover:text-blue-800">Edit</button>
-                                    <button class="text-red-600 hover:text-red-800">Delete</button>
+                                    <form action="" method="POST">
+                                    <button type="submit" name="deleteCategory" value="<?=$category["id"]?>" class="text-red-600 hover:text-red-800">Delete</button>
+                                    </form>
+                                    
                                 </div>
                             </div>
                         </div>
