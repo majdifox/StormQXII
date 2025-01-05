@@ -67,11 +67,10 @@ class admin extends users{
 
     public function displayCategory(){
 
-        $query = "SELECT name, description, created_at, updated_at, created_at FROM categories";
-        $stmt = $this->prepare($query);
-        $stmt->execute();
+        $query = "SELECT * FROM categories";
+        $stmt = $this->conn->query($query);
 
-        return $stmt;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 

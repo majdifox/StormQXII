@@ -9,11 +9,16 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
 
     $name= $_POST["categoryName"] ;
     $description = $_POST["categoryDescription"] ;
-    
+
     $admin->createCategory($name,$description);
 
 }
 
+    $db = new Database();
+    $admin = new admin($db->getConnection());
+
+    $display = $admin->displayCategory();
+    var_dump($display);
 
 ?>
 
@@ -65,12 +70,17 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                 <div class="bg-white rounded-lg shadow p-6">
                     <h2 class="text-xl font-semibold mb-4">Categories</h2>
                     <div class="space-y-4">
-                        <!-- Category Card -->
+                       <?php
+                       foreach($display as $category){
+
+
+                       
+                       ?><!-- Category Card -->
                         <div class="border rounded-lg p-4">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="text-lg font-medium">Technology</h3>
-                                    <p class="text-gray-600 mt-1">All technology related articles</p>
+                                    <h3 class="text-lg font-medium"><?=$category["name"]?></h3>
+                                    <p class="text-gray-600 mt-1"><?=$category["description"]?></p>
                                 </div>
                                 <div class="flex space-x-2">
                                     <button class="text-blue-600 hover:text-blue-800">Edit</button>
@@ -78,7 +88,9 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                 </div>
                             </div>
                         </div>
-                        <!-- Add more category cards here -->
+                        <?php
+}
+                        ?>
                     </div>
                 </div>
 
