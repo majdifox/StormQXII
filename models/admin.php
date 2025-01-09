@@ -106,7 +106,7 @@ class admin extends users{
         $query = "SELECT *
                  FROM articles a 
                  LEFT JOIN categories c ON a.category_id = c.id 
-                 LEFT JOIN users u ON a.author_id = u.id  
+                 LEFT JOIN users u ON a.author_id = u.id  where validation_admin = 'non confirme'
                  ORDER BY a.created_at DESC";
         
         $stmt = $this->conn->query($query);

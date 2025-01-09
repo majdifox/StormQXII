@@ -124,7 +124,7 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                 Status: <?php echo htmlspecialchars($article['validation_admin']); ?>
                                 </span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    <?php echo htmlspecialchars($article['name']); ?>
+                                    Category: <?php echo htmlspecialchars($article['name']); ?>
                                 </span>
                                 <span class="text-sm text-gray-500"><?php echo $article['created_at']; ?></span>
                             </div>
@@ -148,6 +148,7 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                         </div>
                         <!-- Add more article cards here -->
                     </div>
+                    <br>
                     <?php endforeach; ?>
                 </div>
             </div>
