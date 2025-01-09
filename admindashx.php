@@ -29,10 +29,9 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
         $result = $admin->deleteCategory($id);
         header("Location: admindash.php?id=" . $admin->getId());
         
-        
+
 }
-        $articles = $admin->displayArticles();
-        // $categories = $admin->getCategories();
+
 ?>
 
 <!DOCTYPE html>
@@ -91,7 +90,6 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                        ?><!-- Category Card -->
                         <div class="border rounded-lg p-4">
                             <div class="flex justify-between items-start">
-                                
                                 <div>
                                     <h3 class="text-lg font-medium"><?=$category["name"]?></h3>
                                     <p class="text-gray-600 mt-1"><?=$category["description"]?></p>
@@ -112,8 +110,8 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                     </div>
                 </div>
 
-               <!-- Pending Articles Section -->
-               <div class="bg-white rounded-lg shadow p-6">
+                <!-- Pending Articles Section -->
+                <div class="bg-white rounded-lg shadow p-6">
                     <h2 class="text-xl font-semibold mb-4">Pending Articles</h2>
                     <?php foreach($articles as $article): ?>
                     <div class="space-y-4">
@@ -124,7 +122,7 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                 Status: <?php echo htmlspecialchars($article['validation_admin']); ?>
                                 </span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    <?php echo htmlspecialchars($article['name']); ?>
+                                    <?php echo htmlspecialchars($article['category_name']); ?>
                                 </span>
                                 <span class="text-sm text-gray-500"><?php echo $article['created_at']; ?></span>
                             </div>
@@ -143,21 +141,13 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                                         Reject
                                     </button>
                                 </div>
-                         
                             </div>
                         </div>
                         <!-- Add more article cards here -->
                     </div>
-                    <?php endforeach; ?>
                 </div>
             </div>
-           
-        </div>
-    </div>
-                        <!-- Add more article cards here -->
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 

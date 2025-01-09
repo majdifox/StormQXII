@@ -101,6 +101,18 @@ class admin extends users{
         
 
     }
+
+    public function displayArticles() {
+        $query = "SELECT *
+                 FROM articles a 
+                 LEFT JOIN categories c ON a.category_id = c.id 
+                 LEFT JOIN users u ON a.author_id = u.id  
+                 ORDER BY a.created_at DESC";
+        
+        $stmt = $this->conn->query($query);
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
     
 

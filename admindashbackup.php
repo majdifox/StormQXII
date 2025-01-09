@@ -91,7 +91,6 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                        ?><!-- Category Card -->
                         <div class="border rounded-lg p-4">
                             <div class="flex justify-between items-start">
-                                
                                 <div>
                                     <h3 class="text-lg font-medium"><?=$category["name"]?></h3>
                                     <p class="text-gray-600 mt-1"><?=$category["description"]?></p>
@@ -112,48 +111,42 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                     </div>
                 </div>
 
-               <!-- Pending Articles Section -->
-               <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-xl font-semibold mb-4">Pending Articles</h2>
-                    <?php foreach($articles as $article): ?>
-                    <div class="space-y-4">
-                        <!-- Article Card -->
-                        <div class="border rounded-lg p-4">
+                <!-- Pending Articles Section -->
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <?php foreach($articles as $article): ?>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-6">
                             <div class="flex justify-between items-start">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                Status: <?php echo htmlspecialchars($article['validation_admin']); ?>
-                                </span>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     <?php echo htmlspecialchars($article['name']); ?>
                                 </span>
-                                <span class="text-sm text-gray-500"><?php echo $article['created_at']; ?></span>
+                                <div class="flex space-x-2">
+                                    <span class="text-gray-500 text-sm">
+                                        Status: <?php echo htmlspecialchars($article['validation_admin']); ?>
+                                    </span>
+                                </div>
                             </div>
-                            <h3 class="mt-2 text-lg font-medium"><?php echo htmlspecialchars($article['title']); ?></h3>
-                            <p class="mt-1 text-gray-600 text-sm"><?php echo htmlspecialchars($article['description']); ?></p>
+                            <h3 class="mt-2 text-xl font-semibold text-gray-900">
+                                <?php echo htmlspecialchars($article['title']); ?>
+                            </h3>
+                            <p class="mt-2 text-gray-600 text-sm">
+                                <?php echo htmlspecialchars($article['description']); ?>
+                            </p>
                             <div class="mt-4 prose max-w-none">
                                 <?php echo $article['content']; ?>
                             </div>
                             <div class="mt-4 flex justify-between items-center">
-                                <span class="text-sm text-gray-600"><?php echo htmlspecialchars($article['name']); ?></span>
-                                <div class="flex space-x-2">
-                                    <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
-                                        Approve
-                                    </button>
-                                    <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
-                                        Reject
-                                    </button>
-                                </div>
-                         
+                                <span class="text-sm text-gray-500">
+                                    <?php echo $article['created_at']; ?>
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    By: <?php echo htmlspecialchars($article['firstname'] . ' ' . $article['lastname']); ?>
+                                </span>
                             </div>
                         </div>
-                        <!-- Add more article cards here -->
                     </div>
-                    <?php endforeach; ?>
-                </div>
+                <?php endforeach; ?>
             </div>
-           
-        </div>
-    </div>
                         <!-- Add more article cards here -->
                     </div>
                 </div>
