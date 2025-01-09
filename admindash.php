@@ -2,6 +2,7 @@
 require_once "./models/admin.php";
 require_once "./config/dbconfig.php";
 
+
 if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
 
     $db = new Database();
@@ -30,6 +31,15 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
         header("Location: admindash.php?id=" . $admin->getId());
         
         
+}
+if(isset($_GET["validate"])) {
+    echo "jhjh";
+    $db = new Database();
+    $id =$_GET["validate"];
+    
+    $admin = new admin($db->getConnection());
+    $result = $admin->confirmArticle($id);
+    
 }
         $articles = $admin->displayArticles();
         // $categories = $admin->getCategories();
@@ -136,9 +146,9 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
                             <div class="mt-4 flex justify-between items-center">
                                 <span class="text-sm text-gray-600"><?php echo htmlspecialchars($article['name']); ?></span>
                                 <div class="flex space-x-2">
-                                    <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                    <a href='admindash.php?validate=<?=$article['id']?>' class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
                                         Approve
-                                    </button>
+                    </a>
                                     <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
                                         Reject
                                     </button>

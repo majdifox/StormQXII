@@ -5,6 +5,7 @@
     require_once "./models/author.php";
     require_once "./models/member.php";
     
+    
     $database = new Database();
     $id = $_GET["id"];
     $author = new author($database->getConnection(),$id);

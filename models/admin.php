@@ -113,6 +113,26 @@ class admin extends users{
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function confirmArticle($id){
+        echo 'mcha liha';
+        $validation_admin = "confirme";
+        $query = "UPDATE articles SET  validation_admin = :validation_admin where id = :id ";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":id",$id);
+        $stmt->bindParam(":validation_admin",$validation_admin);
+        echo 'mcha liha';
+
+        $stmt->execute();
+        echo 'mcha liha';
+
+    }
+
+    public function rejectArticle(){
+
+        
+    }
 }
     
 
