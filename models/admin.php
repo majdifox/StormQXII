@@ -40,12 +40,13 @@ class admin extends users{
     public function modifyCategory($name, $description){
         $updated_at = date("Y-m-d");
         $created_by = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : NULL;
-        $query = "UPDATE categories SET name=:name, description=:description,  updated_at=:updated_at, created_by=:created_by";
+        $query = "UPDATE categories SET name=:name, description=:description,  updated_at=:updated_at, created_by=:created_by where id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":name",$name);
         $stmt->bindParam(":description",$description);
         $stmt->bindParam(":updated_at",$updated_at);
         $stmt->bindParam(":created_by",$created_by);
+        $stmt->bindParam(":id", $_GET['id']);
 
         $stmt->execute();
 

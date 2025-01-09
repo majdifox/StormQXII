@@ -1,90 +1,93 @@
 <?php
-    require_once "./config/dbconfig.php";
-    require_once "./models/users.php";
-    require_once "./models/member.php";
+require_once "./config/dbconfig.php";
+require_once "./models/users.php";
+require_once "./models/member.php";
 
 $database = new Database();
 $db = $database->getConnection();
 
-// $user = new member($db);
+$newuser = null; // Initialize the variable
 
-// $message = '';
-
-if(isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
     try {
+        // Get input fields
         $firstname = $_POST['firstname'];
         $lastname = $_POST['lastname'];
         $email = $_POST['email'];
         $password = $_POST['password'];
         $phone = $_POST['phone'];
         $role = $_POST['role'];
-        
-        $newuser = new member($db);
+
+        // File upload handling
+        $targetDir = "uploads/";
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true); // Create directory if it doesn't exist
+        }
+
+        if (isset($_FILES['picture']) && $_FILES['picture']['error'] === UPLOAD_ERR_OK) {
+            $fileName = basename($_FILES["picture"]["name"]);
+            $targetFilePath = $targetDir . $fileName;
+
+            // Validate file type
+            $allowedTypes = ['jpg', 'jpeg', 'png'];
+            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+
+            if (!in_array($fileType, $allowedTypes)) {
+                throw new Exception("Only JPG, JPEG, and PNG files are allowed.");
+            }
+
+            // Move the file to the server
+            if (!move_uploaded_file($_FILES["picture"]["tmp_name"], $targetFilePath)) {
+                throw new Exception("Failed to upload the picture.");
+            }
+
+            // Save the file path
+            $picture = $targetFilePath;
+        } else {
+            throw new Exception("Picture upload is required.");
+        }
+
+        // Create a new member
+        $newuser = new Member($db);
         $newuser->setFirstname($firstname);
         $newuser->setLastname($lastname);
-
         $newuser->setEmail($email);
         $newuser->setPassword($password);
-
         $newuser->setRole($role);
         $newuser->setPhone($phone);
+        $newuser->setPicture($picture);
 
-        
-        // $registerResult = $newuser->register();
-        // var_dump($registerResult);
-        
-        // if($loginResult) {
-        //     echo "Register successful";
-        // } else {
-        //     echo "Register error";
-        // }
+        // Register the user
+        if ($newuser->register()) {
+            // Set session variables
+            session_start();
+            $_SESSION['id'] = $newuser->getId();
+            $_SESSION['role'] = $newuser->getRole();
+            $_SESSION['firstname'] = $newuser->getFirstname();
+            $_SESSION['lastname'] = $newuser->getLastname();
+            $_SESSION['email'] = $newuser->getEmail();
+            $_SESSION['password'] = $newuser->getPassword();
+            $_SESSION['phone'] = $newuser->getPhone();
+            $_SESSION['picture'] = $newuser->getPicture();
+
+            setcookie("user_logged", "true", time() + (86400 * 30), "/");
+
+            // Redirect based on role
+            if ($newuser->getRole() == 'author') {
+                header("Location: create.php?id=" . $newuser->getId());
+            } elseif ($newuser->getRole() == 'member') {
+                header("Location: index.php?id=" . $newuser->getId());
+            }
+            exit();
+        } else {
+            $error = "Registration failed.";
+        }
     } catch (Exception $e) {
-        echo "register process error: " . $e->getMessage();
+        echo "Error: " . $e->getMessage();
     }
-
-
-if($newuser->register()) {
-    $_SESSION['id'] = $newuser->getId();
-    $_SESSION['role'] = $newuser->getRole();
-    $_SESSION['firstname'] = $newuser->getFirstname();
-    $_SESSION['lastname'] = $newuser->getLastname();
-    $_SESSION['email'] = $newuser->getEmail();
-    $_SESSION['password'] = $newuser->getPassword();
-    $_SESSION['phone'] = $newuser->getPhone();
-
-
-    setcookie("user_logged", "true", time() + (86400 * 30), "/");
-
-    if ($newuser->getRole() == 'author') {
-        header("Location: create.php?id=" . $newuser->getId());
-    } elseif($newuser->getRole() == 'member') {
-        header("Location: index.php?id=" . $newuser->getId());
-    }
-    exit();
-} else {
-    $error = "Identifiants invalides";
 }
-
-}
-
-// if(isset($_POST['submit'])) {
-   
-
-   
-
-//     $email = $_POST['email'];
-//     $password = $_POST['password'];
-
-  
-
-//     if ($user->register()) {
-//         $message = "Compte créé avec succès. Votre email est : " . $user->email;
-//     } else {
-//         $message = "Une erreur est survenue lors de la création du compte.";
-//     }
-// }
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -102,7 +105,7 @@ if($newuser->register()) {
             </div>
             <!-- ="../includes/register.inc.php" -->
 
-            <form action="" method="post" class="mt-8 space-y-6" action="#">
+            <form action="" method="post" class="mt-8 space-y-6" enctype="multipart/form-data">
                 <div class="rounded-md shadow-sm space-y-4">
                     <div>
                         <label for="firstName" class="sr-only">First Name</label>
@@ -142,6 +145,10 @@ if($newuser->register()) {
                             <option value="author">Author</option>
                         </select>
                     </div>   
+                    <div>
+                    <label for="picture">Upload Picture:</label>
+                    <input type="file" name="picture" accept="image/*" required><br>
+                    </div>
                 </div>
 
                 <div>

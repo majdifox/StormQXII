@@ -12,6 +12,7 @@ class users{
     protected $password;
     protected $phone;
     protected $role;
+    protected $picture;
 
     public function __construct($db){
 
@@ -102,6 +103,13 @@ class users{
         $this->role = $role;
     }
 
+    public function getpicture(){
+        return $this->picture;
+    }
+
+    public function setpicture($picture){
+        $this-> picture = $picture;
+    }
 
 
     public function login() {
@@ -131,60 +139,7 @@ class users{
 error_log("Email: " . $this->email);
 error_log("Row data: " . print_r($row, true));
 
-    }
-
-
-
-
-//  public function check(){
-
-
-
-//     if(isset($_POST["submit"])){
-    
-//         $email = $_POST["email"];
-//         $password = $_POST["password"];
-    
-//         echo "yes sir ";
-    
-//     }
-    
-//     else{
-//     echo "not working";
-//     }
-
-// }
-// public function prevent(){
-
-//     if (!isset($_COOKIE['user_logged']) || $_COOKIE['user_logged'] !== 'true') {
-//         header("Location: ../login.php");
-//         exit();
-//     }
-    
-//     if (!isset($_SESSION['user_type'])) {
-//         $database = new Database();
-//         $db = $database->getConnection();
-        
-//         $user = new User($db);
-//         $user->matricule = $_COOKIE['matricule'];
-//         $userInfo = $user->getUserByMatricule();
-//         if ($userInfo) {
-//             $_SESSION['user_type'] = $userInfo['post'];
-//             $_SESSION['matricule'] = $userInfo['matricule'];
-//         } else {
-            
-//             header("Location: ../login.php");
-//             exit();
-//         }
-//     }
-    
-    
-//     if ($_SESSION['user_type'] === 'administration') {
-//         header("Location: index.php");
-//         exit();
-//     }
-// }
-    
+    }    
   
 
 }
