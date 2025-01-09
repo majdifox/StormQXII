@@ -3,12 +3,49 @@
     require_once "./config/dbconfig.php";
     require_once "./models/users.php";
     require_once "./models/author.php";
-
-
     $database = new Database();
-    $db = $database->getConnection();   
+    $id = $_GET["id"];
+    $author = new author($database->getConnection(),$id);
+    
+    // Handle article creation
+    if(isset($_POST["title"], $_POST["category_id"], $_POST["description"], $_POST["content"])) {
+        $author->createArticle(
+            $_POST["title"],
+            $_POST["category_id"],
+            $_POST["description"],
+            $_POST["content"],
+            $_POST["status"] ?? 0
+        );
+    }
+    
+    $articles = $author->displayArticles();
+    $categories = $author->getCategories();
 
 
+
+
+    // if(isset($_POST["title"],$_POST["category"],$_POST["description"],$_POST["content"])){
+    // $database = new Database();
+    // $db = $database->getConnection();   
+    // $id = $_GET['id'] ?? null;
+    // $author = new author($db,$id);
+
+    // $title= $_POST["title"] ;
+    // $category = $_POST["category"] ;
+    // $description = $_POST["description"] ;
+    // $content = $_POST["content"] ;
+    // $status = $_POST["status"];
+
+    //  $author->createArticle($title, $category, $description, $content, $status);
+
+
+    // }
+
+    // $db = new Database();
+    // $author = new author($db->getConnection());
+
+    // $display = $author->displayArticles();
+    // var_dump($display);
     
 ?>
 
@@ -21,6 +58,16 @@
     <title>StormQ - Author Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: '#content',
+            plugins: 'image media link code',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | image media link | code',
+            height: 400,
+            images_upload_url: 'upload.php',
+            automatic_uploads: true
+        });
+    </script>
 </head>
 <body class="bg-gray-100">
     <!-- Navigation -->
@@ -50,35 +97,48 @@
                     Create New Article
                 </button>
             </div>
-
+    
             <!-- Article Feed -->
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="articleFeed">
-                <!-- Article Card Template -->
-                <div class="bg-white rounded-lg shadow overflow-hidden">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                Technology
-                            </span>
-                            <div class="flex space-x-2">
-                                <button class="text-blue-600 hover:text-blue-800" onclick="editArticle(1)">Edit</button>
-                                <button class="text-red-600 hover:text-red-800" onclick="deleteArticle(1)">Delete</button>
+             <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <!-- Article Feed -->
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <?php foreach($articles as $article): ?>
+                    <div class="bg-white rounded-lg shadow overflow-hidden">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <?php echo htmlspecialchars($article['category_name']); ?>
+                                </span>
+                                <div class="flex space-x-2">
+                                    <span class="text-gray-500 text-sm">
+                                        Status: <?php echo htmlspecialchars($article['validation_admin']); ?>
+                                    </span>
+                                </div>
+                            </div>
+                            <h3 class="mt-2 text-xl font-semibold text-gray-900">
+                                <?php echo htmlspecialchars($article['title']); ?>
+                            </h3>
+                            <p class="mt-2 text-gray-600 text-sm">
+                                <?php echo htmlspecialchars($article['description']); ?>
+                            </p>
+                            <div class="mt-4 prose max-w-none">
+                                <?php echo $article['content']; ?>
+                            </div>
+                            <div class="mt-4 flex justify-between items-center">
+                                <span class="text-sm text-gray-500">
+                                    <?php echo $article['formatted_date']; ?>
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    By: <?php echo htmlspecialchars($article['firstname'] . ' ' . $article['lastname']); ?>
+                                </span>
                             </div>
                         </div>
-                        <h3 class="mt-2 text-xl font-semibold text-gray-900">Sample Article Title</h3>
-                        <p class="mt-2 text-gray-600 text-sm line-clamp-3">This is a sample description for the article.</p>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-sm text-gray-500">Jan 4, 2025</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                Pending
-                            </span>
-                        </div>
                     </div>
-                </div>
+                <?php endforeach; ?>
             </div>
-        </div>
-    </div>
 
+                       
     <!-- Article Creation/Edit Modal -->
     <div id="articleModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative w-full max-w-2xl max-h-full">
@@ -89,6 +149,7 @@
                     <h3 class="text-xl font-semibold text-gray-900" id="modalTitle">
                         Create New Article
                     </h3>
+                    
                     <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center" data-modal-hide="articleModal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -97,7 +158,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
-                    <form id="articleForm" class="space-y-4">
+                    <form method="POST" id="articleForm" class="space-y-4">
                         <input type="hidden" id="articleId" name="articleId">
                         <div>
                             <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
@@ -106,15 +167,14 @@
                         </div>
                         
                         <div>
-                            <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-                            <select id="category" name="category" required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                <option value="">Select a category</option>
-                                <option value="technology">Technology</option>
-                                <option value="science">Science</option>
-                                <option value="health">Health</option>
-                                <option value="business">Business</option>
-                            </select>
+                        <label for="category_id">Category</label>
+                    <select name="category_id" id="category_id" required>
+                        <?php foreach($categories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>">
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                         </div>
 
                         <div>
@@ -137,7 +197,7 @@
                                 <option value="pending">Submit for Review</option>
                             </select>
                         </div>
-                    </form>
+                    
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b">
@@ -145,46 +205,47 @@
                             class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10">
                         Cancel
                     </button>
-                    <button type="button" onclick="saveArticle()" 
+                    <button name="save" type="submit" 
                             class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                         Save Article
                     </button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
-        function editArticle(articleId) {
-            // Set modal title
-            document.getElementById('modalTitle').textContent = 'Edit Article';
-            document.getElementById('articleId').value = articleId;
+        // function editArticle(articleId) {
+        //     // Set modal title
+        //     document.getElementById('modalTitle').textContent = 'Edit Article';
+        //     document.getElementById('articleId').value = articleId;
             
-            // Open modal
-            const modal = document.getElementById('articleModal');
-            modal.classList.remove('hidden');
-        }
+        //     // Open modal
+        //     const modal = document.getElementById('articleModal');
+        //     modal.classList.remove('hidden');
+        // }
 
-        function deleteArticle(articleId) {
-            if (confirm('Are you sure you want to delete this article?')) {
-                // Here you would typically submit to your deleteArticle PHP endpoint
-                console.log('Deleting article:', articleId);
-            }
-        }
+        // function deleteArticle(articleId) {
+        //     if (confirm('Are you sure you want to delete this article?')) {
+        //         // Here you would typically submit to your deleteArticle PHP endpoint
+        //         console.log('Deleting article:', articleId);
+        //     }
+        // }
 
-        function saveArticle() {
-            const form = document.getElementById('articleForm');
-            const articleId = document.getElementById('articleId').value;
+        // function saveArticle() {
+        //     const form = document.getElementById('articleForm');
+        //     const articleId = document.getElementById('articleId').value;
             
-            // If articleId exists, it's an edit operation
-            if (articleId) {
-                form.action = 'modify_article.php';
-            } else {
-                form.action = 'create_article.php';
-            }
+        //     // If articleId exists, it's an edit operation
+        //     if (articleId) {
+        //         form.action = 'modify_article.php';
+        //     } else {
+        //         form.action = 'create_article.php';
+        //     }
             
-            form.submit();
-        }
+        //     form.submit();
+        // }
 
         // Clear form when opening create new article
         document.querySelector('[data-modal-target="articleModal"]').addEventListener('click', function() {

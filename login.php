@@ -52,7 +52,7 @@ if(isset($_POST['submit'])) {
         setcookie("user_logged", "true", time() + (86400 * 30), "/");
     
         if ($user->getRole() == 'author') {
-            header("Location: index.php?id=" . $user->getId());
+            header("Location: authordash.php?id=" . $user->getId());
         } elseif($user->getRole() == 'member') {
             header("Location: pages/membre.php?id=" . $user->getId());
         }

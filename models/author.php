@@ -1,94 +1,62 @@
 <?php
-
 require_once "users.php";
 require_once "member.php";
 
+class author extends member {
+    protected $id;
+    protected $table = "articles";
 
-class author extends member{
-
-    private $articles = "articles";
-
-    private $title;
-    private $status;
-    private $description;
-    private $content;
-    private $category_id;
-    private $author_id;
-    private $created_at;
-    private $updated_at;
-    private $publication_date;
-
-
-
-
-
-public function createArticle(){
-
-    $query = "INSERT INTO ". $this->$articles . "SET title=:title, status=:status, description=:description, content=:content, category_id=:category_id, author_id=:author_id, created_at=:created_at, updated_at=:updated_at, publication_date=:publication_date ";
-    $stmt= $this->conn->prepare($query);
-
-    $this->$title = htmlspecialchars(strip_tags($this->title));
-    $this->$title = htmlspecialchars(strip_tags($this->$status));
-    $this->$description = htmlspecialchars(strip_tags($this->$description));
-    $this->$content = htmlspecialchars(strip_tags($this->$content));
-    $this->$category_id = htmlspecialchars(strip_tags($this->category_id));
-    $this->$author_id = htmlspecialchars(strip_tags($this->$author_id));
-    $this->$created_at= htmlspecialchars(strip_tags($this->$created_at));
-    $this->$updated_at= htmlspecialchars(strip_tags($this->$updated_at));
-
-    $stmt->bindParam(":title", $this->title);
-    $stmt->bindParam(":status", $this->status);
-    $stmt->bindParam(":description", $this->description);
-    $stmt->bindParam(":content", $this->content);
-    $stmt->bindParam(":category_at", $this->category_at);
-    $stmt->bindParam(":updated_at", $this->updated_at);
-    $stmt->bindParam(":publication_date", $this->publication_date);
-
-    if($stmt->execute){
-        return true;
+    public function __construct($db, $id = null) {
+        parent::__construct($db);
+            $this->id = $id;        
+        
+    
     }
-    
-        return false;
-    
-    
+
+    public function createArticle($title, $category_id, $description, $content, $status) {
+        $query = "INSERT INTO " . $this->table . " 
+                 (title, category_id, description, content, status, author_id, created_at) 
+                 VALUES (:title, :category_id, :description, :content, :status, :author_id, NOW())";
+        
+        $stmt = $this->conn->prepare($query);
+        
+        $stmt->bindParam(":title", $title);
+        $stmt->bindParam(":category_id", $category_id);
+        $stmt->bindParam(":description", $description);
+        $stmt->bindParam(":content", $content);
+        $stmt->bindParam(":status", $status);
+        $stmt->bindParam(":author_id", $this->id);
+        
+        return $stmt->execute();
+    }
+
+    public function displayArticles() {
+        $query = "SELECT a.*, c.name as category_name, u.firstname, u.lastname, 
+                        DATE_FORMAT(a.created_at, '%M %d, %Y') as formatted_date 
+                 FROM " . $this->table . " a 
+                 LEFT JOIN categories c ON a.category_id = c.id 
+                 LEFT JOIN users u ON a.author_id = u.id  
+                 WHERE u.id=:id
+                 ORDER BY a.created_at DESC";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam("id",$this->id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCategories() {
+        $query = "SELECT id, name FROM categories ORDER BY name";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteArticle($id) {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(":id", $id);
+        return $stmt->execute();
+    }
 }
-
-
-
-
-
-
-
-public function modifyArticle(){
-
-    $query = "UPDATE articles SET title=:title, status=:status, description=:description, content=:content, category_id=:category_id, author_id=:author_id, created_at=:created_at, updated_at=:updated_at, publication_date=:publication_date ";
-    $stmt = $this->conn->prepare($query);
-   
-    $stmt->bindParam(":title", $this->title);
-    $stmt->bindParam(":status", $this->status);
-    $stmt->bindParam(":description", $this->description);
-    $stmt->bindParam(":content", $this->content);
-    $stmt->bindParam(":category_at", $this->category_at);
-    $stmt->bindParam(":updated_at", $this->updated_at);
-    $stmt->bindParam(":publication_date", $this->publication_date);
-
-    $stmt->execute();
-    return $stmt;
-}
-
-
-public function deleteArticle($id){
-
-    $query = "DELETE FROM articles WHERE id = :id  ";
-    $stmt = $this->conn->prepare($query);
-
-    $stmt->bindParam(":id",$id);
-    $stmt->execute();
-
-    return $stmt;
-}
-
-}  
-
-
 ?>
