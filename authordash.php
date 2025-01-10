@@ -5,9 +5,10 @@
     require_once "./models/author.php";
     require_once "./models/member.php";
     
-    
+    session_start();
+
     $database = new Database();
-    $id = $_GET["id"];
+    $id =  $_SESSION['id'];
     $author = new author($database->getConnection(),$id);
     
     // Handle article creation
@@ -24,6 +25,26 @@
     $articles = $author->displayArticles();
     $categories = $author->getCategories();
 
+    if(isset($_GET["modify"])) {
+        echo "jhjh";
+        $db = new Database();
+        $id =$_GET["modify"];
+        
+        $admin = new admin($db->getConnection());
+        $result = $admin-modifyArticle($title, $category_id, $description,  $content, $status);
+        header("Location: authordash.php?id_article=" . $author->getId());
+
+    }
+
+    if(isset($_GET["delete"])) {
+        echo "jhjh";
+        $db = new Database();
+        $id =$_GET["delete"];
+        
+        $admin = new admin($db->getConnection());
+        $result = $admin->rejectArticle($id);
+        
+    }
 
 
 
@@ -136,6 +157,14 @@
                                     By: <?php echo htmlspecialchars($article['firstname'] . ' ' . $article['lastname']); ?>
                                 </span>
                             </div>
+                            <div class="flex space-x-2">
+                                    <a href='articleEdit.php?id_article=<?=$article['id']?>' class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                        Modify
+                    </a>
+                                    <a href='authordash.php?delete=<?=$article['id']?>' class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                        Delete
+                    </a>
+                                </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

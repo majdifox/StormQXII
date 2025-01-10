@@ -45,12 +45,12 @@ if(isset($_POST['submit'])) {
 
 
     if($user->login()) {
+        echo "hhhh";
         $_SESSION['id'] = $user->getId();
         $_SESSION['role'] = $user->getRole();
         $_SESSION['firstname'] = $user->getFirstname();
         $_SESSION['lastname'] = $user->getLastname();
         setcookie("user_logged", "true", time() + (86400 * 30), "/");
-    
         if ($user->getRole() == 'author') {
             header("Location: authordash.php?id=" . $user->getId());
         } elseif($user->getRole() == 'member') {

@@ -30,6 +30,33 @@ class author extends member {
         return $stmt->execute();
     }
 
+    public function modifyArticle($title, $category_id, $description,  $content, $status,$id_article){
+        // $updated_at = date("Y-m-d");
+        $created_by = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : NULL;
+
+        $query = "UPDATE articles SET title = :title, category_id = :category_id, description = :description , content = :content , status = :status
+                  where id = :id_article";
+
+   
+
+// $query = "UPDATE  " . $this->table . " SET
+// (title, category_id, description, content, status, author_id, created_at) 
+// VALUES (:title, :category_id, :description, :content, :status, :author_id" where id = :id ;
+
+        $stmt = $this->conn->prepare($query);
+        
+        $stmt->bindParam(":title", $title);
+        $stmt->bindParam(":category_id", $category_id);
+        $stmt->bindParam(":description", $description);
+        $stmt->bindParam(":content", $content);
+        $stmt->bindParam(":status", $status);
+        $stmt->bindParam(":id_article", $id_article);
+        $stmt->execute();
+
+        return $stmt->execute();
+
+    }
+
     public function displayArticles() {
         $query = "SELECT a.*, c.name as category_name, u.firstname, u.lastname, 
                         DATE_FORMAT(a.created_at, '%M %d, %Y') as formatted_date 

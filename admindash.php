@@ -4,7 +4,7 @@ require_once "./config/dbconfig.php";
 
 
 if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
-
+    
     $db = new Database();
     $admin = new admin($db->getConnection());
 
