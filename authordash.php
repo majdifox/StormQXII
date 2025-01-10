@@ -8,6 +8,7 @@
     session_start();
 
     $database = new Database();
+
     $id =  $_SESSION['id'];
     $author = new author($database->getConnection(),$id);
     
@@ -41,8 +42,8 @@
         $db = new Database();
         $id =$_GET["delete"];
         
-        $admin = new admin($db->getConnection());
-        $result = $admin->rejectArticle($id);
+        $author = new author($db->getConnection());
+        $result = $author->deleteArticle($id);
         
     }
 
