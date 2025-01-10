@@ -54,7 +54,7 @@ if(isset($_POST['submit'])) {
         if ($user->getRole() == 'author') {
             header("Location: authordash.php?id=" . $user->getId());
         } elseif($user->getRole() == 'member') {
-            header("Location: pages/membre.php?id=" . $user->getId());
+            header("Location: pages/index.php?id=" . $user->getId());
         }
         else{
             header("Location: admindash.php?id=" . $user->getId());

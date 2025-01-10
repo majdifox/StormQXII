@@ -1,4 +1,17 @@
+<?php
+require_once "./config/dbconfig.php";
+require_once "./models/admin.php";
+require_once "./models/member.php";
 
+
+
+$db = new Database();
+    $member = new admin($db->getConnection());
+    $articles = $member->displayArticlesforMembers();
+    // $categories = $member->getCategories();
+    $display = $member->displayArticlesforMembers();
+
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -77,18 +90,22 @@
 
             <!-- Feed Posts -->
             <div class="space-y-6">
+            <?php foreach($articles as $article): ?>
                 <!-- Post 1 -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex items-center mb-4">
                         <img class="h-10 w-10 rounded-full" src="/api/placeholder/40/40" alt="Author profile">
                         <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900">John Doe</p>
-                            <p class="text-sm text-gray-500">Posted on Jan 1, 2025</p>
+                            <p class="text-sm font-medium text-gray-900"> By: <?php echo htmlspecialchars($article['firstname'] . ' ' . $article['lastname']); ?></p>
+                            <p class="text-sm text-gray-500"><?php echo $article['created_at']; ?></p>
                         </div>
-                        <span class="ml-auto px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">Technology</span>
+                        <span class="ml-auto px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">Category: <?php echo htmlspecialchars($article['name']); ?></span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">The Future of AI Development</h3>
-                    <p class="text-gray-600 mb-4">An exploration of how artificial intelligence is shaping our future and transforming industries...</p>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2"><?php echo htmlspecialchars($article['title']); ?></h3>
+                    <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($article['description']); ?></p>
+                    <div class="mt-4 prose max-w-none">
+                                <?php echo $article['content']; ?>
+                            </div>
                     <div class="flex items-center justify-between">
                         <div class="flex space-x-4">
                             <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
@@ -103,34 +120,9 @@
                         <button class="text-indigo-600 hover:text-indigo-700 font-medium">Read More</button>
                     </div>
                 </div>
-
-                <!-- Post 2 -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex items-center mb-4">
-                        <img class="h-10 w-10 rounded-full" src="/api/placeholder/40/40" alt="Author profile">
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900">Jane Smith</p>
-                            <p class="text-sm text-gray-500">Posted on Dec 31, 2024</p>
-                        </div>
-                        <span class="ml-auto px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Design</span>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">UI Design Trends for 2025</h3>
-                    <p class="text-gray-600 mb-4">Discover the latest trends in user interface design that will dominate the upcoming year...</p>
-                    <div class="flex items-center justify-between">
-                        <div class="flex space-x-4">
-                            <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
-                                <i class="far fa-heart"></i>
-                                <span>18</span>
-                            </button>
-                            <button class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600">
-                                <i class="far fa-comment"></i>
-                                <span>8</span>
-                            </button>
-                        </div>
-                        <button class="text-indigo-600 hover:text-indigo-700 font-medium">Read More</button>
-                    </div>
-                </div>
-            </div>
+                <br>
+                <?php endforeach; ?>
+              
 
             <!-- Load More -->
             <div class="text-center mt-8">
