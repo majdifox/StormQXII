@@ -103,7 +103,7 @@ class admin extends users{
     }
 
     public function displayArticles() {
-        $query = "SELECT *
+        $query = "SELECT * , a.id as article_id 
                  FROM articles a 
                  LEFT JOIN categories c ON a.category_id = c.id 
                  LEFT JOIN users u ON a.author_id = u.id  where validation_admin = 'non confirme'
@@ -129,9 +129,20 @@ class admin extends users{
 
     }
 
-    public function rejectArticle(){
+    public function rejectArticle($id){
+        echo 'mcha liha';
+        $query = "DELETE  FROM articles where id = :id ";
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->bindParam(":id",$id);
+        echo 'mcha liha';
+
+        $stmt->execute();
+        echo 'mcha liha';
 
         
+
+
     }
 }
     

@@ -43,6 +43,27 @@ if(isset($_GET["validate"])) {
 }
         $articles = $admin->displayArticles();
         // $categories = $admin->getCategories();
+
+    //     if(isset($_GET["reject"])){
+
+    //         $db = new Database();
+    //         $id =$_POST["reject"];
+            
+    //         $admin = new admin($db->getConnection());
+    //         $result = $admin->rejectArticle($id);
+             
+            
+    // }
+
+    if(isset($_GET["reject"])) {
+        echo "jhjh";
+        $db = new Database();
+        $id =$_GET["reject"];
+        
+        $admin = new admin($db->getConnection());
+        $result = $admin->rejectArticle($id);
+        
+    }
 ?>
 
 <!DOCTYPE html>
@@ -146,12 +167,12 @@ if(isset($_GET["validate"])) {
                             <div class="mt-4 flex justify-between items-center">
                                 <span class="text-sm text-gray-600"><?php echo htmlspecialchars($article['name']); ?></span>
                                 <div class="flex space-x-2">
-                                    <a href='admindash.php?validate=<?=$article['id']?>' class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+                                    <a href='admindash.php?validate=<?=$article['article_id']?>' class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
                                         Approve
                     </a>
-                                    <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
+                                    <a href='admindash.php?reject=<?=$article['article_id']?>' class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">
                                         Reject
-                                    </button>
+                    </a>
                                 </div>
                          
                             </div>
