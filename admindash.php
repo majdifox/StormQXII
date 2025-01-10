@@ -165,7 +165,9 @@ if(isset($_GET["validate"])) {
                                 <?php echo $article['content']; ?>
                             </div>
                             <div class="mt-4 flex justify-between items-center">
-                                <span class="text-sm text-gray-600"><?php echo htmlspecialchars($article['name']); ?></span>
+                            <span class="text-sm text-gray-500">
+                                    By: <?php echo htmlspecialchars($article['firstname'] . ' ' . $article['lastname']); ?>
+                                </span>
                                 <div class="flex space-x-2">
                                     <a href='admindash.php?validate=<?=$article['article_id']?>' class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
                                         Approve
