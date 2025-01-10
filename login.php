@@ -25,15 +25,29 @@ if(isset($_POST['submit'])) {
         $user->setEmail($email);
         $user->setPassword($password);
         
-        $loginResult = $user->login($email, $password);
-        var_dump($loginResult);
+        // Single login attempt
+        $role = $user->login($email, $password);
         
-        if($loginResult) {
-            echo "Login successful";
-            var_dump($_SESSION);
-
+        if($role) {
+            setcookie("user_logged", "true", time() + (86400 * 30), "/");
+            
+            // Redirect based on role
+            switch($role) {
+                case 'author':
+                    header("Location: authordash.php?id=" . $_SESSION['user_id']);
+                    break;
+                case 'member':
+                    header("Location: pages/index.php?id=" . $_SESSION['user_id']);
+                    break;
+                case 'admin':
+                    header("Location: admindash.php?id=" . $_SESSION['user_id']);
+                    break;
+                default:
+                    throw new Exception("Invalid role");
+            }
+            exit();
         } else {
-            echo "Login failed";
+            $error = "Invalid credentials";
         }
     } catch (Exception $e) {
         echo "Login process error: " . $e->getMessage();

@@ -51,7 +51,7 @@ $db = new Database();
                         </div>
                     </div>
                     <div class="ml-4 flex items-center">
-                        <img class="h-8 w-8 rounded-full" src="/api/placeholder/32/32" alt="User profile">
+                        <img  <?php echo $users['picture']; ?> class="h-8 w-8 rounded-full" src="/api/placeholder/32/32" alt="User profile">
                         <button class="ml-3 text-gray-500 hover:text-gray-700">Logout</button>
                     </div>
                 </div>

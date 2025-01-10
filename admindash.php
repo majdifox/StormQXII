@@ -19,7 +19,7 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
     $admin = new admin($db->getConnection());
 
     $display = $admin->displayCategory();
-    var_dump($display);
+
 
     if(isset($_POST["deleteCategory"])){
 
@@ -33,7 +33,6 @@ if(isset($_POST["categoryName"],$_POST["categoryDescription"])){
         
 }
 if(isset($_GET["validate"])) {
-    echo "jhjh";
     $db = new Database();
     $id =$_GET["validate"];
     
@@ -56,7 +55,6 @@ if(isset($_GET["validate"])) {
     // }
 
     if(isset($_GET["reject"])) {
-        echo "jhjh";
         $db = new Database();
         $id =$_GET["reject"];
         
