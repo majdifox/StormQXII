@@ -25,7 +25,7 @@ if(isset($_POST['submit'])) {
         $user->setEmail($email);
         $user->setPassword($password);
         
-        $loginResult = $user->login();
+        $loginResult = $user->login($email, $password);
         var_dump($loginResult);
         
         if($loginResult) {
@@ -44,7 +44,7 @@ if(isset($_POST['submit'])) {
 
 
 
-    if($user->login()) {
+    if($user->login($email, $password)) {
         echo "hhhh";
         $_SESSION['id'] = $user->getId();
         $_SESSION['role'] = $user->getRole();

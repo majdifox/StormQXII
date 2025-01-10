@@ -112,35 +112,62 @@ class users{
     }
 
 
-    public function login() {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE email = ? LIMIT 0,1";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->email);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+//     public function login() {
+//         $query = "SELECT * FROM " . $this->table_name . " WHERE email = ? LIMIT 0,1";
+//         $stmt = $this->conn->prepare($query);
+//         $stmt->bindParam(1, $this->email);
+//         $stmt->execute();
+//         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        error_log("Stored password hash: " . $row['password']);
-        error_log("Input password: " . $this->password);
+//         error_log("Stored password hash: " . $row['password']);
+//         error_log("Input password: " . $this->password);
         
-        if($row) {
-            $passwordMatch = password_verify($this->password, $row['password']);
-            error_log("Password match: " . ($passwordMatch ? 'true' : 'false'));
+//         if($row) {
+//             $passwordMatch = password_verify($this->password, $row['password']);
+//             error_log("Password match: " . ($passwordMatch ? 'true' : 'false'));
             
-            if($passwordMatch) {
-                $this->id = $row['id'];
-                $this->firstname = $row['firstname'];
-                $this->lastname = $row['lastname'];
-                $this->role = $row['role'];
-                return true;
-            }
+//             if($passwordMatch) {
+//                 $this->id = $row['id'];
+//                 $this->firstname = $row['firstname'];
+//                 $this->lastname = $row['lastname'];
+//                 $this->role = $row['role'];
+//                 return true;
+//             }
+//         }
+//         return false;
+
+
+//         error_log("Query: " . $query);
+// error_log("Email: " . $this->email);
+// error_log("Row data: " . print_r($row, true));
+
+//     }    
+public function login($email, $password) {
+    try {
+        $query = "SELECT id, email, password, role FROM users WHERE email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user && password_verify($password, $user['password'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_role'] = $user['role'];
+            
+            // Send email notification
+            require_once __DIR__ . '/EmailNotification.php';
+            $emailNotifier = new EmailNotification($this->conn);
+            $emailNotifier->sendLoginNotification($user['id']);
+            
+            return $user['role'];
         }
         return false;
-        error_log("Query: " . $query);
-error_log("Email: " . $this->email);
-error_log("Row data: " . print_r($row, true));
-
-    }    
-  
+    } catch (PDOException $e) {
+        error_log("Login error: " . $e->getMessage());
+        return false;
+    }
+}
 
 }
 
